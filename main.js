@@ -8,7 +8,7 @@ let selectedPostIdForAction = null;
 // Navigation & Path Helpers
 // ==========================================
 function isSubfolder() {
-  return window.location.pathname.includes('/qdetailspost/');
+  return window.location.pathname.toLowerCase().includes('qdetailspost');
 }
 
 function getBasePath() {
@@ -16,7 +16,7 @@ function getBasePath() {
 }
 
 function getHomePath() {
-  return isSubfolder() ? '../home.html' : './home.html';
+  return isSubfolder() ? '../index.html' : './index.html';
 }
 
 function getProfilePath(userId) {
