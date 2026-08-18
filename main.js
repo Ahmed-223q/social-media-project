@@ -121,11 +121,13 @@ function getCurrentUserId() {
 function appendAlert(message, type) {
   const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
   if (!alertPlaceholder) return;
+  const icon = type === 'success' ? 'check-circle-fill' : type === 'danger' ? 'exclamation-circle-fill' : type === 'warning' ? 'exclamation-triangle-fill' : 'info-circle-fill';
   const wrapper = document.createElement('div');
   wrapper.innerHTML = [
-    `<div class="alert alert-${type} alert-dismissible fade show shadow" role="alert">`,
-    `   <div>${message}</div>`,
-    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    `<div class="alert alert-${type} alert-dismissible fade show shadow-lg d-flex align-items-center gap-2" role="alert">`,
+    `   <i class="bi bi-${icon} fs-5"></i>`,
+    `   <div class="flex-grow-1">${message}</div>`,
+    '   <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>',
     '</div>'
   ].join('');
   alertPlaceholder.append(wrapper);
@@ -341,34 +343,36 @@ function getPostes(page = 1, reload = false) {
         let deleteBtn = "";
         if (currentUser && currentUser.id == post.author.id) {
           const postJsonStr = encodeURIComponent(JSON.stringify(post));
-          editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')">Edit</button>`;
-          deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})">Delete</button>`;
+          editBtn = `<button class="btn btn-sm btn-light-action text-success" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')" title="تعديل"><i class="bi bi-pencil-square me-1"></i>تعديل</button>`;
+          deleteBtn = `<button class="btn btn-sm btn-light-action text-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})" title="حذف"><i class="bi bi-trash3 me-1"></i>حذف</button>`;
         }
 
         container.innerHTML += `
           <!-- post -->
-          <div class="col-12 col-md-9 m-auto shadow-sm rounded mb-4" id="post-${post.id}">
-            <div class="card" onclick="postClicked(${post.id})" style="cursor: pointer;">
-              <div class="card-header d-flex justify-content-between align-items-center bg-white">
-                <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${post.author.id}, event)" title="عرض الملف الشخصي">
-                  <img src="${authorImage}" onerror="this.src='./profile-pics/user.png'" alt="" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" class="border border-secondary" />
-                  <span style="font-size: 1.15rem; font-weight: 600; color: #212529;">${post.author.username}</span>
-                </div>
+          <div class="post-card mb-4" id="post-${post.id}">
+            <div class="post-card-header">
+              <div class="post-author-info" onclick="userClicked(${post.author.id}, event)" title="عرض الملف الشخصي">
+                <img src="${authorImage}" onerror="this.src='./profile-pics/user.png'" alt="${post.author.username}" class="post-author-avatar" />
                 <div>
-                  ${editBtn}
-                  ${deleteBtn}
+                  <h6 class="post-author-name">${post.author.username}</h6>
+                  <span class="post-time"><i class="bi bi-clock me-1"></i>${post.created_at || ''}</span>
                 </div>
               </div>
-              <div class="card-body">
-                ${postImgHtml}
-                <span style="color: #6c757d; font-size: 0.85rem;">${post.created_at || ''}</span>
-                <h4 class="mt-2 text-dark">${post.title || ''}</h4>
-                <p class="text-secondary">${post.body || ''}</p>
-                <hr>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${post.comments_count}) comments</span>
-                  <span id="post-tags${post.id}"></span>
+              <div class="d-flex align-items-center gap-1">
+                ${editBtn}
+                ${deleteBtn}
+              </div>
+            </div>
+            <div class="post-card-body" onclick="postClicked(${post.id})" style="cursor: pointer;">
+              ${post.title ? `<h4 class="post-title">${post.title}</h4>` : ''}
+              <p class="post-text">${post.body || ''}</p>
+              ${postImage ? `<div class="post-image-container"><img src="${postImage}" alt="post-image" class="post-image" /></div>` : ''}
+              <div class="post-card-footer">
+                <div class="comments-badge-btn">
+                  <i class="bi bi-chat-dots-fill text-primary"></i>
+                  <span>(${post.comments_count}) تعليقات</span>
                 </div>
+                <div id="post-tags${post.id}"></div>
               </div>
             </div>
           </div>
@@ -378,7 +382,7 @@ function getPostes(page = 1, reload = false) {
         let tagDiv = document.getElementById(`post-tags${post.id}`);
         if (tagDiv && post.tags) {
           for (let tag of post.tags) {
-            tagDiv.innerHTML += `<span class="badge bg-secondary me-1">${tag.name}</span>`;
+            tagDiv.innerHTML += `<span class="tag-badge">${tag.name}</span>`;
           }
         }
       }
@@ -496,20 +500,18 @@ function getPost() {
           const comment = data.comments[i];
           const commentAuthorImage = getSafeAvatar(comment.author.profile_image);
           commentsDiv += `
-            <!-- comment -->
-            <div class="p-3 my-2" style="background-color: #f8f9fa; border-radius: 10px;" id="comment${comment.id}">
-              <div style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px;" onclick="userClicked(${comment.author.id}, event)" title="عرض الملف الشخصي">
-                <img src="${commentAuthorImage}" onerror="this.src='../profile-pics/user.png'" alt="" style="height: 35px; width: 35px; border-radius: 50%; object-fit: cover;" class="border">
-                <b class="text-dark">${comment.author.username}</b>
+            <!-- comment bubble -->
+            <div class="comment-bubble" id="comment${comment.id}">
+              <div class="comment-header" onclick="userClicked(${comment.author.id}, event)" title="عرض الملف الشخصي">
+                <img src="${commentAuthorImage}" onerror="this.src='../profile-pics/user.png'" alt="" class="comment-avatar border">
+                <span class="comment-author-name">${comment.author.username}</span>
               </div>
-              <div class="mt-2 ps-2">
-                <p class="mb-0 text-secondary">${comment.body}</p>
-              </div>
+              <p class="comment-body">${comment.body}</p>
             </div>
           `;
         }
       } else {
-        commentsDiv = `<p class="text-muted p-2">لا توجد تعليقات حتى الآن.</p>`;
+        commentsDiv = `<p class="text-muted text-center py-3">لا توجد تعليقات حتى الآن. كن أول من يعلق! ✨</p>`;
       }
 
       let editBtn = "";
@@ -517,47 +519,51 @@ function getPost() {
       const currentUser = JSON.parse(localStorage.getItem("user"));
       if (currentUser && currentUser.id == data.author.id) {
         const postJsonStr = encodeURIComponent(JSON.stringify(data));
-        editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="prepareEditPostFromEncoded('${postJsonStr}')">Edit</button>`;
-        deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="prepareDeletePost(${data.id})">Delete</button>`;
+        editBtn = `<button class="btn btn-sm btn-light-action text-success" data-bs-toggle="modal" data-bs-target="#editModal" onclick="prepareEditPostFromEncoded('${postJsonStr}')" title="تعديل"><i class="bi bi-pencil-square me-1"></i>تعديل</button>`;
+        deleteBtn = `<button class="btn btn-sm btn-light-action text-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="prepareDeletePost(${data.id})" title="حذف"><i class="bi bi-trash3 me-1"></i>حذف</button>`;
       }
 
       if (postCreator) {
-        postCreator.innerHTML = `<span>${data.author.username}</span> Post`;
+        postCreator.innerHTML = `منشور <span class="text-primary">${data.author.username}</span>`;
       }
 
       const postAuthorImg = getSafeAvatar(data.author.profile_image);
       const postImage = getSafePostImage(data.image);
-      const postImgHtml = postImage
-        ? `<img src="${postImage}" alt="post-image" style="width: 100%; max-height: 500px; object-fit: cover;" class="rounded my-2" />`
-        : '';
 
       postDeatils.innerHTML = `
-        <div class="col-12 col-md-9 m-auto shadow-sm rounded mb-4" id="post-${data.id}">
-          <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center bg-white">
-              <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${data.author.id}, event)" title="عرض الملف الشخصي">
-                <img src="${postAuthorImg}" onerror="this.src='../profile-pics/user.png'" alt="" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" class="border border-secondary" />
-                <span style="font-size: 1.15rem; font-weight: 600;">${data.author.username}</span>
-              </div>
+        <div class="post-card mb-4" id="post-${data.id}">
+          <div class="post-card-header">
+            <div class="post-author-info" onclick="userClicked(${data.author.id}, event)" title="عرض الملف الشخصي">
+              <img src="${postAuthorImg}" onerror="this.src='../profile-pics/user.png'" alt="" class="post-author-avatar" />
               <div>
-                ${editBtn}
-                ${deleteBtn}
+                <h6 class="post-author-name">${data.author.username}</h6>
+                <span class="post-time"><i class="bi bi-clock me-1"></i>${data.created_at || ''}</span>
               </div>
             </div>
-            <div class="card-body">
-              ${postImgHtml}
-              <span style="color: #6c757d; font-size: 0.85rem;">${data.created_at || ''}</span>
-              <h4 class="mt-2 text-dark">${data.title || ''}</h4>
-              <p class="text-secondary">${data.body || ''}</p>
-              <hr />
-              <div>
-                <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${data.comments_count}) comments</span>
-                <div class="mt-3">
-                  ${commentsDiv}
-                  ${handleComment()}
-                </div>
-                <div id="post-tags-${data.id}" class="mt-2"></div>
+            <div class="d-flex align-items-center gap-1">
+              ${editBtn}
+              ${deleteBtn}
+            </div>
+          </div>
+          <div class="post-card-body">
+            ${data.title ? `<h4 class="post-title">${data.title}</h4>` : ''}
+            <p class="post-text">${data.body || ''}</p>
+            ${postImage ? `<div class="post-image-container"><img src="${postImage}" alt="post-image" class="post-image" /></div>` : ''}
+            <div class="post-card-footer">
+              <div class="comments-badge-btn">
+                <i class="bi bi-chat-dots-fill text-primary"></i>
+                <span>(${data.comments_count}) تعليقات</span>
               </div>
+              <div id="post-tags-${data.id}"></div>
+            </div>
+
+            <!-- Comments Thread -->
+            <div class="mt-4 pt-3 border-top">
+              <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-chat-left-text me-2 text-primary"></i>التعليقات (${data.comments_count})</h6>
+              <div class="comments-list mb-3">
+                ${commentsDiv}
+              </div>
+              ${handleComment()}
             </div>
           </div>
         </div>
@@ -566,7 +572,7 @@ function getPost() {
       let tagDiv = document.getElementById(`post-tags-${data.id}`);
       if (tagDiv && data.tags) {
         for (let tag of data.tags) {
-          tagDiv.innerHTML += `<span class="badge bg-secondary me-1">${tag.name}</span>`;
+          tagDiv.innerHTML += `<span class="tag-badge">${tag.name}</span>`;
         }
       }
     })
@@ -580,15 +586,17 @@ function handleComment() {
   const token = localStorage.getItem("token");
   if (token != null) {
     return `
-      <div id="addCommentDiv" class="my-3 d-flex gap-2">
-        <input type="text" id="commentInput" class="form-control" placeholder="أضف تعليقاً...">
-        <button class="btn btn-primary" onclick="createCommentClicked()">إرسال</button>
+      <div class="add-comment-bar">
+        <input type="text" id="commentInput" placeholder="اكتب تعليقاً لطيفاً..." onkeydown="if(event.key === 'Enter') createCommentClicked()">
+        <button class="btn btn-primary btn-sm px-4" onclick="createCommentClicked()">
+          <i class="bi bi-send-fill me-1"></i>إرسال
+        </button>
       </div>
     `;
   } else {
     return `
-      <div class="alert alert-light border my-2 text-center text-muted">
-        سجل الدخول لتتمكن من إضافة تعليق.
+      <div class="alert alert-light border my-3 text-center text-muted rounded-pill">
+        <i class="bi bi-info-circle me-1"></i>يرجى تسجيل الدخول لتتمكن من إضافة تعليق.
       </div>
     `;
   }
@@ -847,39 +855,38 @@ function renderProfilePostsPage(page = 1) {
 
     if (currentUser && currentUser.id == post.author.id) {
       const postJsonStr = encodeURIComponent(JSON.stringify(post));
-      editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')">Edit</button>`;
-      deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})">Delete</button>`;
+      editBtn = `<button class="btn btn-sm btn-light-action text-success" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')" title="تعديل"><i class="bi bi-pencil-square me-1"></i>تعديل</button>`;
+      deleteBtn = `<button class="btn btn-sm btn-light-action text-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})" title="حذف"><i class="bi bi-trash3 me-1"></i>حذف</button>`;
     }
 
     const authorImage = getSafeAvatar(post.author.profile_image);
     const postImage = getSafePostImage(post.image);
-    const postImgHtml = postImage
-      ? `<img src="${postImage}" alt="post-image" style="width: 100%; max-height: 500px; object-fit: cover;" class="rounded my-2" />`
-      : '';
 
     userPostesDiv.innerHTML += `
-      <div class="col-12 col-md-9 m-auto shadow-sm rounded mb-4" id="post-${post.id}">
-        <div class="card" onclick="postClicked(${post.id})" style="cursor: pointer;">
-          <div class="card-header d-flex justify-content-between align-items-center bg-white">
-            <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${post.author.id}, event)" title="عرض الملف الشخصي">
-              <img src="${authorImage}" onerror="this.src='../profile-pics/user.png'" alt="" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" class="border border-secondary" />
-              <span style="font-size: 1.15rem; font-weight: 600;">${post.author.username}</span>
-            </div>
+      <div class="post-card mb-4" id="post-${post.id}">
+        <div class="post-card-header">
+          <div class="post-author-info" onclick="userClicked(${post.author.id}, event)" title="عرض الملف الشخصي">
+            <img src="${authorImage}" onerror="this.src='../profile-pics/user.png'" alt="" class="post-author-avatar" />
             <div>
-              ${editBtn}
-              ${deleteBtn}
+              <h6 class="post-author-name">${post.author.username}</h6>
+              <span class="post-time"><i class="bi bi-clock me-1"></i>${post.created_at || ''}</span>
             </div>
           </div>
-          <div class="card-body">
-            ${postImgHtml}
-            <span style="color: #6c757d; font-size: 0.85rem;">${post.created_at || ''}</span>
-            <h4 class="mt-2 text-dark">${post.title || ''}</h4>
-            <p class="text-secondary">${post.body || ''}</p>
-            <hr />
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${post.comments_count}) comments</span>
-              <span id="user-post-tags-${post.id}"></span>
+          <div class="d-flex align-items-center gap-1">
+            ${editBtn}
+            ${deleteBtn}
+          </div>
+        </div>
+        <div class="post-card-body" onclick="postClicked(${post.id})" style="cursor: pointer;">
+          ${post.title ? `<h4 class="post-title">${post.title}</h4>` : ''}
+          <p class="post-text">${post.body || ''}</p>
+          ${postImage ? `<div class="post-image-container"><img src="${postImage}" alt="post-image" class="post-image" /></div>` : ''}
+          <div class="post-card-footer">
+            <div class="comments-badge-btn">
+              <i class="bi bi-chat-dots-fill text-primary"></i>
+              <span>(${post.comments_count}) تعليقات</span>
             </div>
+            <div id="user-post-tags-${post.id}"></div>
           </div>
         </div>
       </div>
@@ -888,7 +895,7 @@ function renderProfilePostsPage(page = 1) {
     let tagDiv = document.getElementById(`user-post-tags-${post.id}`);
     if (tagDiv && post.tags) {
       for (let tag of post.tags) {
-        tagDiv.innerHTML += `<span class="badge bg-secondary me-1">${tag.name}</span>`;
+        tagDiv.innerHTML += `<span class="tag-badge">${tag.name}</span>`;
       }
     }
   }
