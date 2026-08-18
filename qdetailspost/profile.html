@@ -17,16 +17,91 @@
     />
 
     <style>
-      body {
-        background-color: #f0ecff;
+      :root {
+        --primary-color: #4f46e5;
+        --primary-hover: #4338ca;
+        --bg-page: #f8fafc;
+        --card-bg: #ffffff;
+        --card-border: #e2e8f0;
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
+        --tag-bg: #eef2ff;
+        --tag-text: #4f46e5;
+        --tag-border: #c7d2fe;
       }
 
+      body {
+        background-color: var(--bg-page) !important;
+        color: var(--text-dark);
+      }
+
+      /* Navbar & Brand */
+      .navbar-brand {
+        color: var(--primary-color) !important;
+        font-weight: 700 !important;
+      }
+
+      .nav-link.active,
+      .nav-link:hover {
+        color: var(--primary-color) !important;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-hover) !important;
+        border-color: var(--primary-hover) !important;
+      }
+
+      .btn-outline-success {
+        color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+      }
+
+      .btn-outline-success:hover {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: #ffffff !important;
+      }
+
+      .btn-outline-danger {
+        color: #ef4444 !important;
+        border-color: #fca5a5 !important;
+      }
+
+      .btn-outline-danger:hover {
+        background-color: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: #ffffff !important;
+      }
+
+      /* Cards */
+      .card {
+        background-color: var(--card-bg) !important;
+        border: 1px solid var(--card-border) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04) !important;
+      }
+
+      .card-header {
+        background-color: var(--card-bg) !important;
+        border-bottom: 1px solid var(--card-border) !important;
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+      }
+
+      /* Add Post Floating Button */
       #addBtn {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        height: 50px;
-        width: 50px;
+        bottom: 24px;
+        right: 24px;
+        height: 52px;
+        width: 52px;
+        background-color: var(--primary-color) !important;
         color: #fff;
         border-radius: 50%;
         font-size: 32px;
@@ -34,8 +109,39 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 24px rgba(79, 70, 229, 0.38);
+        border: 2px solid #ffffff;
         z-index: 999;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      #addBtn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 12px 28px rgba(79, 70, 229, 0.48);
+      }
+
+      /* Badges & Tags */
+      .badge.bg-secondary {
+        background-color: var(--tag-bg) !important;
+        color: var(--tag-text) !important;
+        border: 1px solid var(--tag-border) !important;
+        font-weight: 600 !important;
+      }
+
+      .text-primary {
+        color: var(--primary-color) !important;
+      }
+
+      /* Profile counters */
+      #postsCounter, #commentConunter {
+        color: var(--primary-color) !important;
+      }
+
+      /* Modals */
+      .modal-content {
+        border-radius: 16px !important;
+        border: 1px solid var(--card-border) !important;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
       }
     </style>
   </head>
