@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Profile</title>
+    <title>User Profile - FaceNote</title>
     <!-- Bootstrap Icons & Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -33,6 +33,11 @@
       body {
         background-color: var(--bg-page) !important;
         color: var(--text-dark);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      }
+
+      [dir="rtl"] body {
+        font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       }
 
       /* Navbar & Brand */
@@ -115,6 +120,11 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
+      [dir="rtl"] #addBtn {
+        right: auto;
+        left: 24px;
+      }
+
       #addBtn:hover {
         transform: scale(1.08);
         box-shadow: 0 12px 28px rgba(79, 70, 229, 0.48);
@@ -143,13 +153,17 @@
         border: 1px solid var(--card-border) !important;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
       }
+
+      .is-invalid {
+        border-color: #ef4444 !important;
+      }
     </style>
   </head>
   <body>
     <!-- login alert -->
     <div
       id="liveAlertPlaceholder"
-      style="position: fixed; right: 20px; bottom: 20px; z-index: 10000"
+      style="position: fixed; right: 20px; bottom: 20px; z-index: 10000; max-width: 400px;"
     ></div>
     <!-- ## login alert ## -->
 
@@ -159,13 +173,13 @@
       class="modal fade"
       id="loginModal"
       tabindex="-1"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="loginModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+            <h1 class="modal-title fs-5" id="loginModalLabel" data-i18n="loginModalTitle">Login</h1>
             <button
               type="button"
               class="btn-close"
@@ -174,28 +188,28 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form onsubmit="event.preventDefault(); loginBtnClick();">
               <div class="mb-3">
-                <label for="username-input" class="col-form-label"
-                  >Username:</label
-                >
+                <label for="username-input" class="col-form-label" data-i18n="usernameLabel">Username:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="username-input"
-               
+                  data-i18n-placeholder="usernamePlaceholder"
+                  placeholder="e.g. ahmed_dev"
                 />
+                <div id="login-username-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="password-input" class="col-form-label"
-                  >Password:</label
-                >
+                <label for="password-input" class="col-form-label" data-i18n="passwordLabel">Password:</label>
                 <input
                   type="password"
                   class="form-control"
                   id="password-input"
-       
+                  data-i18n-placeholder="passwordPlaceholder"
+                  placeholder="Enter your password"
                 />
+                <div id="login-password-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
             </form>
           </div>
@@ -204,6 +218,7 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -211,6 +226,7 @@
               type="button"
               class="btn btn-primary"
               onclick="loginBtnClick()"
+              data-i18n="login"
             >
               Login
             </button>
@@ -225,13 +241,13 @@
       class="modal fade"
       id="RegisterModal"
       tabindex="-1"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="registerModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
+            <h1 class="modal-title fs-5" id="registerModalLabel" data-i18n="registerModalTitle">
               Register a new user
             </h1>
             <button
@@ -242,36 +258,44 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form onsubmit="event.preventDefault(); RegisterBtnClick();">
               <div class="mb-3">
-                <label for="re-name-input" class="col-form-label">Name:</label>
-                <input type="text" class="form-control" id="re-name-input" />
+                <label for="re-name-input" class="col-form-label" data-i18n="nameLabel">Name:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="re-name-input"
+                  data-i18n-placeholder="namePlaceholder"
+                  placeholder="e.g. Ahmed Ibrahim"
+                />
+                <div id="re-name-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="re-username-input" class="col-form-label"
-                  >Username:</label
-                >
+                <label for="re-username-input" class="col-form-label" data-i18n="usernameLabel">Username:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="re-username-input"
+                  data-i18n-placeholder="regUsernamePlaceholder"
+                  placeholder="e.g. ahmed_2024 (letters & numbers)"
                 />
+                <div id="re-username-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="re-password-input" class="col-form-label"
-                  >Password:</label
-                >
+                <label for="re-password-input" class="col-form-label" data-i18n="passwordLabel">Password:</label>
                 <input
                   type="password"
                   class="form-control"
                   id="re-password-input"
+                  data-i18n-placeholder="regPasswordPlaceholder"
+                  placeholder="At least 6 characters"
                 />
+                <div id="re-password-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="re-image-input" class="col-form-label"
-                  >Profile Image:</label
-                >
-                <input type="file" class="form-control" id="re-image-input" />
+                <label for="re-image-input" class="col-form-label" data-i18n="profileImageLabel">Profile Picture:</label>
+                <input type="file" class="form-control" id="re-image-input" accept="image/*" />
+                <div id="re-image-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
             </form>
           </div>
@@ -280,6 +304,7 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -287,6 +312,7 @@
               type="button"
               class="btn btn-primary"
               onclick="RegisterBtnClick()"
+              data-i18n="register"
             >
               Register
             </button>
@@ -296,18 +322,20 @@
     </div>
     <!-- ## modal of Register ## -->
 
-    <!-- modal to edit post -->
+    <!-- modal create new post -->
     <div
       class="modal fade"
-      id="editModal"
+      id="createNewPost"
       tabindex="-1"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="createNewPostLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editModalLabel">Edit Post</h1>
+            <h1 class="modal-title fs-5" id="createNewPostLabel" data-i18n="addNewPostTitle">
+              Add new post
+            </h1>
             <button
               type="button"
               class="btn-close"
@@ -316,18 +344,34 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form onsubmit="event.preventDefault(); createNewPostList();">
               <div class="mb-3">
-                <label for="editTitle" class="col-form-label">Title:</label>
-                <input type="text" class="form-control" id="editTitle" />
+                <label for="post-title-input" class="col-form-label" data-i18n="postTitleLabel">Title:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="post-title-input"
+                  data-i18n-placeholder="postTitlePlaceholder"
+                  placeholder="e.g. Exciting announcement!"
+                />
+                <div id="post-title-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
+
               <div class="mb-3">
-                <label for="editBody" class="col-form-label">Body:</label>
-                <textarea class="form-control" id="editBody"></textarea>
+                <label for="post-body-input" class="col-form-label" data-i18n="postBodyLabel">Body:</label>
+                <textarea
+                  class="form-control"
+                  id="post-body-input"
+                  rows="4"
+                  data-i18n-placeholder="postBodyPlaceholder"
+                  placeholder="What's on your mind?"
+                ></textarea>
+                <div id="post-body-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
+
               <div class="mb-3">
-                <label for="editImage" class="col-form-label">Image:</label>
-                <input type="file" class="form-control" id="editImage" />
+                <label for="post-image-input" class="col-form-label" data-i18n="postImageLabel">Image:</label>
+                <input type="file" class="form-control" id="post-image-input" accept="image/*" />
               </div>
             </form>
           </div>
@@ -336,6 +380,67 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              data-i18n="closeBtn"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="createNewPostList()"
+              data-i18n="publishBtn"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ## modal create new post ## -->
+
+    <!-- modal to edit post -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editModalLabel" data-i18n="editPostTitle">Edit Post</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="event.preventDefault(); updataPost();">
+              <div class="mb-3">
+                <label for="editTitle" class="col-form-label" data-i18n="postTitleLabel">Title:</label>
+                <input type="text" class="form-control" id="editTitle" />
+                <div id="edit-title-error" class="text-danger small mt-1" style="display: none;"></div>
+              </div>
+              <div class="mb-3">
+                <label for="editBody" class="col-form-label" data-i18n="postBodyLabel">Body:</label>
+                <textarea class="form-control" id="editBody" rows="4"></textarea>
+                <div id="edit-body-error" class="text-danger small mt-1" style="display: none;"></div>
+              </div>
+              <div class="mb-3">
+                <label for="editImage" class="col-form-label" data-i18n="postImageLabel">Image:</label>
+                <input type="file" class="form-control" id="editImage" accept="image/*" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -343,6 +448,7 @@
               type="button"
               class="btn btn-primary"
               onclick="updataPost()"
+              data-i18n="saveChangesBtn"
             >
               Save Changes
             </button>
@@ -357,13 +463,13 @@
       class="modal fade"
       id="DeleteModal"
       tabindex="-1"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="DeleteModalLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="DeleteModalLabel">Delete Post</h1>
+            <h1 class="modal-title fs-5" id="DeleteModalLabel" data-i18n="deletePostTitle">Delete Post</h1>
             <button
               type="button"
               class="btn-close"
@@ -372,17 +478,18 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p>Are you sure you want to delete this post?</p>
+            <p data-i18n="deleteConfirmation">Are you sure you want to delete this post?</p>
           </div>
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              data-i18n="closeBtn"
             >
               Close
             </button>
-            <button type="button" class="btn btn-danger" onclick="deletePost()">
+            <button type="button" class="btn btn-danger" onclick="deletePost()" data-i18n="deleteBtn">
               Delete
             </button>
           </div>
@@ -391,86 +498,10 @@
     </div>
     <!-- ## modal to delete post ## -->
 
-    <!-- modal create new post -->
-    <div
-      class="modal fade"
-      id="createNewPost"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
-              Add new post
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="post-title-input" class="col-form-label"
-                  >Title:</label
-                >
-                <input type="text" class="form-control" id="post-title-input" />
-              </div>
-              <div class="mb-3">
-                <label for="post-body-input" class="col-form-label"
-                  >Body:</label
-                >
-                <textarea class="form-control" id="post-body-input"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="post-image-input" class="col-form-label"
-                  >Image:</label
-                >
-                <input type="file" class="form-control" id="post-image-input" />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick="createNewPostList()"
-            >
-              Add
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- ## modal create new post ## -->
-
-    <!-- add new post floating button -->
-    <div
-      class="bg-primary"
-      id="addBtn"
-      type="button"
-      data-bs-target="#createNewPost"
-      data-bs-toggle="modal"
-    >
-      <i class="bi bi-plus"></i>
-    </div>
-    <!-- ## add new post floating button ## -->
-
     <!-- start container -->
     <div class="container mb-4">
       <!-- start navbar -->
-      <div class="container shadow-sm p-1 mb-4 bg-body-tertiary rounded mt-1">
+      <div class="container shadow-sm p-1 mb-4 bg-body-tertiary rounded mt-2">
         <div class="m-auto">
           <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
@@ -487,12 +518,12 @@
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div
-                class="collapse navbar-collapse w-100 justify-content-between align-center"
+                class="collapse navbar-collapse w-100 justify-content-between align-items-center"
                 id="navbarNav"
               >
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html">Home</a>
+                    <a class="nav-link" href="../index.html" data-i18n="home">Home</a>
                   </li>
                   <li class="nav-item">
                     <a
@@ -500,75 +531,95 @@
                       aria-current="page"
                       href="javascript:void(0)"
                       onclick="profileNavClicked()"
+                      data-i18n="profile"
                       >Profile</a
                     >
                   </li>
                 </ul>
-                <!-- login button -->
-                <div id="loginBtnDiv">
+
+                <!-- Right controls: Lang switcher + Auth buttons -->
+                <div class="d-flex align-items-center gap-2">
+                  <!-- Language Switcher Button -->
                   <button
                     type="button"
-                    class="btn btn-outline-success me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#loginModal"
-                    id="loginBtn"
+                    class="btn btn-outline-primary btn-sm rounded-pill px-3"
+                    onclick="toggleLanguage()"
+                    id="langSwitcherBtn"
                   >
-                    login
+                    🌐 العربية
                   </button>
-                  <button
-                    type="button"
-                    data-bs-target="#RegisterModal"
-                    data-bs-toggle="modal"
-                    class="btn btn-outline-success"
-                    id="registerBtn"
-                  >
-                    Register
-                  </button>
-                </div>
-                <!-- ## login button -->
-                <!-- logout button -->
-                <div
-                  style="
-                    display: none;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 10px;
-                  "
-                  id="logoutBtnDiv"
-                >
-                  <div
-                    onclick="profileNavClicked()"
-                    style="
-                      cursor: pointer;
-                      display: flex;
-                      align-items: center;
-                      gap: 8px;
-                    "
-                    title="عرض حسابي"
-                  >
-                    <b style="font-size: 1.2rem" id="userName"></b>
-                    <img
-                      src=""
-                      alt=""
-                      style="
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                      "
-                      id="userImage"
-                      onerror="this.src = '../profile-pics/user.png'"
-                    />
+
+                  <!-- login button -->
+                  <div id="loginBtnDiv" class="d-flex align-items-center gap-2">
+                    <button
+                      type="button"
+                      class="btn btn-outline-success"
+                      data-bs-toggle="modal"
+                      data-bs-target="#loginModal"
+                      id="loginBtn"
+                      data-i18n="login"
+                    >
+                      Login
+                    </button>
+                    <button
+                      type="button"
+                      data-bs-target="#RegisterModal"
+                      data-bs-toggle="modal"
+                      class="btn btn-outline-success"
+                      id="registerBtn"
+                      data-i18n="register"
+                    >
+                      Register
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger"
-                    onclick="logout()"
+                  <!-- ## login button -->
+
+                  <!-- logout button -->
+                  <div
+                    style="
+                      display: none;
+                      justify-content: center;
+                      align-items: center;
+                      gap: 10px;
+                    "
+                    id="logoutBtnDiv"
                   >
-                    logout
-                  </button>
+                    <div
+                      onclick="profileNavClicked()"
+                      style="
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                      "
+                      data-i18n-title="viewMyProfile"
+                      title="View My Profile"
+                    >
+                      <b style="font-size: 1.1rem" id="userName"></b>
+                      <img
+                        src=""
+                        alt=""
+                        style="
+                          width: 38px;
+                          height: 38px;
+                          border-radius: 50%;
+                          object-fit: cover;
+                        "
+                        id="userImage"
+                        onerror="this.src = '../profile-pics/user.png'"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger btn-sm"
+                      onclick="logout()"
+                      data-i18n="logout"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                  <!-- ## logout button -->
                 </div>
-                <!-- ## logout button -->
               </div>
             </div>
           </nav>
@@ -611,11 +662,11 @@
           >
             <div class="mb-2">
               <span id="postsCounter" class="fw-bold fs-2 text-dark">0</span>
-              <span class="text-muted fs-6">Posts</span>
+              <span class="text-muted fs-6" data-i18n="postsStat">Posts</span>
             </div>
             <div>
               <span id="commentConunter" class="fw-bold fs-2 text-dark">0</span>
-              <span class="text-muted fs-6">Comments</span>
+              <span class="text-muted fs-6" data-i18n="commentsStat">Comments</span>
             </div>
           </div>
           <!-- ## number info COL -->
@@ -626,7 +677,7 @@
       <!-- posts header -->
       <div class="col-12 col-md-9 m-auto mb-3">
         <h3 id="mainName" class="fw-bold text-secondary">
-          <span id="postName" class="text-primary"></span>'s Posts
+          <span id="postName" class="text-primary"></span><span data-i18n="userPostsTitle">'s Posts</span>
         </h3>
       </div>
 
