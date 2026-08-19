@@ -131,14 +131,25 @@ function userClicked(userId, event) {
   if (event) {
     event.stopPropagation();
   }
+  const token = localStorage.getItem("token");
+  if (!token) {
+    appendAlert("Please log in first to view user profiles.", "warning");
+    const loginModalEl = document.getElementById("loginModal");
+    if (loginModalEl) {
+      const modal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
+      modal.show();
+    }
+    return;
+  }
   if (!userId) return;
   window.location.href = getProfilePath(userId);
 }
 
 // Click on Profile link or user avatar in Navbar
 function profileNavClicked() {
+  const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  if (user && user.id) {
+  if (token && user && user.id) {
     const targetUrl = getProfilePath(user.id);
     const urlParams = new URLSearchParams(window.location.search);
     const currentUserIdInUrl = urlParams.get('userId');
@@ -394,7 +405,11 @@ function logout() {
   localStorage.removeItem("user");
   setupUI();
   appendAlert("Logged out successfully!", 'info');
-  refreshCurrentPage();
+  if (window.location.pathname.toLowerCase().includes("profile.html")) {
+    window.location.href = getHomePath();
+  } else {
+    refreshCurrentPage();
+  }
 }
 
 function refreshCurrentPage() {
@@ -1083,6 +1098,15 @@ function renderProfilePostsPage(page = 1) {
 window.addEventListener("DOMContentLoaded", () => {
   setupInputListeners();
   setupUI();
+
+  // Auth guard: If on Profile page and not logged in, redirect to Home
+  if (window.location.pathname.toLowerCase().includes("profile.html")) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.replace(getHomePath());
+      return;
+    }
+  }
 
   // If on Home page
   if (document.getElementById("container")) {
