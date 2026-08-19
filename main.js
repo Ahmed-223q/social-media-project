@@ -228,13 +228,31 @@ function setupUI() {
   const addBtn = document.getElementById("addBtn");
 
   if (token == null) {
-    if (loginBtnDiv) loginBtnDiv.style.display = "flex";
-    if (logoutBtnDiv) logoutBtnDiv.style.display = "none";
-    if (addBtn) addBtn.style.display = "none";
+    if (loginBtnDiv) {
+      loginBtnDiv.classList.remove("d-none");
+      loginBtnDiv.style.setProperty("display", "flex", "important");
+    }
+    if (logoutBtnDiv) {
+      logoutBtnDiv.classList.add("d-none");
+      logoutBtnDiv.style.setProperty("display", "none", "important");
+    }
+    if (addBtn) {
+      addBtn.classList.add("d-none");
+      addBtn.style.setProperty("display", "none", "important");
+    }
   } else {
-    if (loginBtnDiv) loginBtnDiv.style.display = "none";
-    if (logoutBtnDiv) logoutBtnDiv.style.display = "flex";
-    if (addBtn) addBtn.style.display = "flex";
+    if (loginBtnDiv) {
+      loginBtnDiv.classList.add("d-none");
+      loginBtnDiv.style.setProperty("display", "none", "important");
+    }
+    if (logoutBtnDiv) {
+      logoutBtnDiv.classList.remove("d-none");
+      logoutBtnDiv.style.setProperty("display", "flex", "important");
+    }
+    if (addBtn) {
+      addBtn.classList.remove("d-none");
+      addBtn.style.setProperty("display", "flex", "important");
+    }
     GetUserData();
   }
 }
