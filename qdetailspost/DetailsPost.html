@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,10 +34,6 @@
         background-color: var(--bg-page) !important;
         color: var(--text-dark);
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      }
-
-      [dir="rtl"] body {
-        font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       }
 
       /* Navbar & Brand */
@@ -120,11 +116,6 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      [dir="rtl"] #addBtn {
-        right: auto;
-        left: 24px;
-      }
-
       #addBtn:hover {
         transform: scale(1.08);
         box-shadow: 0 12px 28px rgba(79, 70, 229, 0.48);
@@ -174,7 +165,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="loginModalLabel" data-i18n="loginModalTitle">Login</h1>
+            <h1 class="modal-title fs-5" id="loginModalLabel">Login</h1>
             <button
               type="button"
               class="btn-close"
@@ -185,23 +176,21 @@
           <div class="modal-body">
             <form onsubmit="event.preventDefault(); loginBtnClick();">
               <div class="mb-3">
-                <label for="username-input" class="col-form-label" data-i18n="usernameLabel">Username:</label>
+                <label for="username-input" class="col-form-label">Username:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="username-input"
-                  data-i18n-placeholder="usernamePlaceholder"
                   placeholder="e.g. ahmed_dev"
                 />
                 <div id="login-username-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="password-input" class="col-form-label" data-i18n="passwordLabel">Password:</label>
+                <label for="password-input" class="col-form-label">Password:</label>
                 <input
                   type="password"
                   class="form-control"
                   id="password-input"
-                  data-i18n-placeholder="passwordPlaceholder"
                   placeholder="Enter your password"
                 />
                 <div id="login-password-error" class="text-danger small mt-1" style="display: none;"></div>
@@ -213,7 +202,6 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
-              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -221,7 +209,6 @@
               type="button"
               class="btn btn-primary"
               onclick="loginBtnClick()"
-              data-i18n="login"
             >
               Login
             </button>
@@ -242,7 +229,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="registerModalLabel" data-i18n="registerModalTitle">
+            <h1 class="modal-title fs-5" id="registerModalLabel">
               Register a new user
             </h1>
             <button
@@ -255,40 +242,37 @@
           <div class="modal-body">
             <form onsubmit="event.preventDefault(); RegisterBtnClick();">
               <div class="mb-3">
-                <label for="re-name-input" class="col-form-label" data-i18n="nameLabel">Name:</label>
+                <label for="re-name-input" class="col-form-label">Name:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="re-name-input"
-                  data-i18n-placeholder="namePlaceholder"
                   placeholder="e.g. Ahmed Ibrahim"
                 />
                 <div id="re-name-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="re-username-input" class="col-form-label" data-i18n="usernameLabel">Username:</label>
+                <label for="re-username-input" class="col-form-label">Username:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="re-username-input"
-                  data-i18n-placeholder="regUsernamePlaceholder"
                   placeholder="e.g. ahmed_2024 (letters & numbers)"
                 />
                 <div id="re-username-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="re-password-input" class="col-form-label" data-i18n="passwordLabel">Password:</label>
+                <label for="re-password-input" class="col-form-label">Password:</label>
                 <input
                   type="password"
                   class="form-control"
                   id="re-password-input"
-                  data-i18n-placeholder="regPasswordPlaceholder"
                   placeholder="At least 6 characters"
                 />
                 <div id="re-password-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="re-image-input" class="col-form-label" data-i18n="profileImageLabel">Profile Picture:</label>
+                <label for="re-image-input" class="col-form-label">Profile Picture:</label>
                 <input type="file" class="form-control" id="re-image-input" accept="image/*" />
                 <div id="re-image-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
@@ -299,7 +283,6 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
-              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -307,7 +290,6 @@
               type="button"
               class="btn btn-primary"
               onclick="RegisterBtnClick()"
-              data-i18n="register"
             >
               Register
             </button>
@@ -328,7 +310,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="createNewPostLabel" data-i18n="addNewPostTitle">
+            <h1 class="modal-title fs-5" id="createNewPostLabel">
               Add new post
             </h1>
             <button
@@ -341,31 +323,29 @@
           <div class="modal-body">
             <form onsubmit="event.preventDefault(); createNewPostList();">
               <div class="mb-3">
-                <label for="post-title-input" class="col-form-label" data-i18n="postTitleLabel">Title:</label>
+                <label for="post-title-input" class="col-form-label">Title:</label>
                 <input
                   type="text"
                   class="form-control"
                   id="post-title-input"
-                  data-i18n-placeholder="postTitlePlaceholder"
                   placeholder="e.g. Exciting announcement!"
                 />
                 <div id="post-title-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
 
               <div class="mb-3">
-                <label for="post-body-input" class="col-form-label" data-i18n="postBodyLabel">Body:</label>
+                <label for="post-body-input" class="col-form-label">Body:</label>
                 <textarea
                   class="form-control"
                   id="post-body-input"
                   rows="4"
-                  data-i18n-placeholder="postBodyPlaceholder"
                   placeholder="What's on your mind?"
                 ></textarea>
                 <div id="post-body-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
 
               <div class="mb-3">
-                <label for="post-image-input" class="col-form-label" data-i18n="postImageLabel">Image:</label>
+                <label for="post-image-input" class="col-form-label">Image:</label>
                 <input type="file" class="form-control" id="post-image-input" accept="image/*" />
               </div>
             </form>
@@ -375,7 +355,6 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
-              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -383,7 +362,6 @@
               type="button"
               class="btn btn-primary"
               onclick="createNewPostList()"
-              data-i18n="publishBtn"
             >
               Add
             </button>
@@ -404,7 +382,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="editModalLabel" data-i18n="editPostTitle">Edit Post</h1>
+            <h1 class="modal-title fs-5" id="editModalLabel">Edit Post</h1>
             <button
               type="button"
               class="btn-close"
@@ -415,17 +393,17 @@
           <div class="modal-body">
             <form onsubmit="event.preventDefault(); updataPost();">
               <div class="mb-3">
-                <label for="editTitle" class="col-form-label" data-i18n="postTitleLabel">Title:</label>
+                <label for="editTitle" class="col-form-label">Title:</label>
                 <input type="text" class="form-control" id="editTitle" />
                 <div id="edit-title-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="editBody" class="col-form-label" data-i18n="postBodyLabel">Body:</label>
+                <label for="editBody" class="col-form-label">Body:</label>
                 <textarea class="form-control" id="editBody" rows="4"></textarea>
                 <div id="edit-body-error" class="text-danger small mt-1" style="display: none;"></div>
               </div>
               <div class="mb-3">
-                <label for="editImage" class="col-form-label" data-i18n="postImageLabel">Image:</label>
+                <label for="editImage" class="col-form-label">Image:</label>
                 <input type="file" class="form-control" id="editImage" accept="image/*" />
               </div>
             </form>
@@ -435,7 +413,6 @@
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
-              data-i18n="closeBtn"
             >
               Close
             </button>
@@ -443,7 +420,6 @@
               type="button"
               class="btn btn-primary"
               onclick="updataPost()"
-              data-i18n="saveChangesBtn"
             >
               Save Changes
             </button>
@@ -464,7 +440,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="DeleteModalLabel" data-i18n="deletePostTitle">Delete Post</h1>
+            <h1 class="modal-title fs-5" id="DeleteModalLabel">Delete Post</h1>
             <button
               type="button"
               class="btn-close"
@@ -473,18 +449,17 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p data-i18n="deleteConfirmation">Are you sure you want to delete this post?</p>
+            <p>Are you sure you want to delete this post?</p>
           </div>
           <div class="modal-footer">
             <button
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
-              data-i18n="closeBtn"
             >
               Close
             </button>
-            <button type="button" class="btn btn-danger" onclick="deletePost()" data-i18n="deleteBtn">
+            <button type="button" class="btn btn-danger" onclick="deletePost()">
               Delete
             </button>
           </div>
@@ -518,31 +493,20 @@
               >
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html" data-i18n="home">Home</a>
+                    <a class="nav-link" href="../index.html">Home</a>
                   </li>
                   <li class="nav-item">
                     <a
                       class="nav-link"
                       href="javascript:void(0)"
                       onclick="profileNavClicked()"
-                      data-i18n="profile"
                       >Profile</a
                     >
                   </li>
                 </ul>
 
-                <!-- Right controls: Lang switcher + Auth buttons -->
+                <!-- Right controls: Auth buttons -->
                 <div class="d-flex align-items-center gap-2">
-                  <!-- Language Switcher Button -->
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary btn-sm rounded-pill px-3"
-                    onclick="toggleLanguage()"
-                    id="langSwitcherBtn"
-                  >
-                    🌐 العربية
-                  </button>
-
                   <!-- login button -->
                   <div id="loginBtnDiv" class="d-flex align-items-center gap-2">
                     <button
@@ -551,7 +515,6 @@
                       data-bs-toggle="modal"
                       data-bs-target="#loginModal"
                       id="loginBtn"
-                      data-i18n="login"
                     >
                       Login
                     </button>
@@ -561,7 +524,6 @@
                       data-bs-toggle="modal"
                       class="btn btn-outline-success"
                       id="registerBtn"
-                      data-i18n="register"
                     >
                       Register
                     </button>
@@ -586,7 +548,6 @@
                         align-items: center;
                         gap: 8px;
                       "
-                      data-i18n-title="viewMyProfile"
                       title="View My Profile"
                     >
                       <b style="font-size: 1.1rem" id="userName"></b>
@@ -607,7 +568,6 @@
                       type="button"
                       class="btn btn-outline-danger btn-sm"
                       onclick="logout()"
-                      data-i18n="logout"
                     >
                       Logout
                     </button>

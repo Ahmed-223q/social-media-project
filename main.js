@@ -5,279 +5,6 @@ let isLoadingPosts = false;
 let selectedPostIdForAction = null;
 
 // ==========================================
-// Multi-Language (i18n) System
-// ==========================================
-const translations = {
-  en: {
-    langBtn: "🌐 العربية",
-    appName: "FaceNote",
-    home: "Home",
-    profile: "Profile",
-    login: "Login",
-    register: "Register",
-    logout: "Logout",
-    viewMyProfile: "View My Profile",
-
-    // Modals - Login
-    loginModalTitle: "Login",
-    usernameLabel: "Username:",
-    usernamePlaceholder: "e.g. ahmed_dev",
-    passwordLabel: "Password:",
-    passwordPlaceholder: "Enter your password",
-    closeBtn: "Close",
-
-    // Modals - Register
-    registerModalTitle: "Register a New User",
-    nameLabel: "Full Name:",
-    namePlaceholder: "e.g. Ahmed Ibrahim",
-    regUsernamePlaceholder: "e.g. ahmed_2024 (English letters & numbers)",
-    regPasswordPlaceholder: "At least 6 characters",
-    profileImageLabel: "Profile Picture:",
-
-    // Modals - Create / Edit Post
-    addNewPostTitle: "Add New Post",
-    editPostTitle: "Edit Post",
-    postTitleLabel: "Title:",
-    postTitlePlaceholder: "e.g. Exciting Announcement!",
-    postBodyLabel: "Content:",
-    postBodyPlaceholder: "What's on your mind?",
-    postImageLabel: "Image:",
-    publishBtn: "Publish",
-    saveChangesBtn: "Save Changes",
-
-    // Modals - Delete
-    deletePostTitle: "Delete Post",
-    deleteConfirmation: "Are you sure you want to delete this post? This action cannot be undone.",
-    deleteBtn: "Delete",
-
-    // Post Card & Feed
-    editBtn: "Edit",
-    commentsCount: "comments",
-    loadMorePosts: "Load more posts",
-    endOfPosts: "🎉 You have reached the end of all posts",
-    loadingPosts: "Loading posts...",
-    scrollDownNotice: "or scroll down to auto-load ⬇️",
-    viewProfileTitle: "View Profile",
-
-    // Post Details
-    postOf: "'s Post",
-    backToPosts: "Back to Posts",
-    noComments: "No comments yet. Be the first to comment! ✨",
-    commentsHeader: "Comments",
-    addCommentPlaceholder: "Write a comment...",
-    sendBtn: "Send",
-    loginToComment: "Please log in to add a comment.",
-
-    // Profile Page
-    postsStat: "Posts",
-    commentsStat: "Comments",
-    userPostsTitle: "'s Posts",
-    noUserPosts: "This user has no posts yet.",
-    paginationPrev: "Previous",
-    paginationNext: "Next",
-    guest: "Guest",
-    unregistered: "Not registered",
-    selectUserNotice: "Please log in or select a user to view their posts.",
-
-    // Validation & Alerts
-    loginRequiredProfile: "Please log in first to view your profile.",
-    loginSuccess: "Logged in successfully!",
-    loginFailed: "Invalid username or password.",
-    registerSuccess: "Account created successfully!",
-    registerFailed: "Registration failed. Please check the fields below.",
-    allFieldsRequired: "This field is required.",
-    passwordMinLength: "Password must be at least 6 characters.",
-    usernameTaken: "This username is already taken. Please try another.",
-    logoutSuccess: "Logged out successfully!",
-    loginRequiredPost: "You must be logged in to create a post.",
-    postCreatedSuccess: "Post published successfully!",
-    postCreateFailed: "Failed to publish post. Please try again.",
-    postDetailsFailed: "Failed to load post details.",
-    loginRequiredComment: "You must be logged in to comment.",
-    emptyCommentWarning: "Comment cannot be empty.",
-    commentSuccess: "Comment added successfully!",
-    commentFailed: "Failed to add comment.",
-    loginRequiredEdit: "You must be logged in to edit a post.",
-    postUpdatedSuccess: "Post updated successfully!",
-    postUpdateFailed: "Failed to update post.",
-    loginRequiredDelete: "You must be logged in to delete a post.",
-    postDeletedSuccess: "Post deleted successfully!",
-    postDeleteFailed: "Failed to delete post.",
-    userDataFailed: "Failed to load user data.",
-    userPostsFailed: "Failed to load user posts."
-  },
-  ar: {
-    langBtn: "🌐 English",
-    appName: "فيس نوت",
-    home: "الرئيسية",
-    profile: "حسابي",
-    login: "تسجيل الدخول",
-    register: "إنشاء حساب",
-    logout: "تسجيل الخروج",
-    viewMyProfile: "عرض حسابي الشخصي",
-
-    // Modals - Login
-    loginModalTitle: "تسجيل الدخول",
-    usernameLabel: "اسم المستخدم:",
-    usernamePlaceholder: "مثال: ahmed_dev",
-    passwordLabel: "كلمة المرور:",
-    passwordPlaceholder: "أدخل كلمة المرور",
-    closeBtn: "إلغاء",
-
-    // Modals - Register
-    registerModalTitle: "إنشاء حساب جديد",
-    nameLabel: "الاسم الكامل:",
-    namePlaceholder: "مثال: أحمد إبراهيم",
-    regUsernamePlaceholder: "مثال: ahmed_2024 (أحرف إنجليزية وأرقام)",
-    regPasswordPlaceholder: "6 أحرف أو أرقام على الأقل",
-    profileImageLabel: "الصورة الشخصية:",
-
-    // Modals - Create / Edit Post
-    addNewPostTitle: "إضافة منشور جديد",
-    editPostTitle: "تعديل المنشور",
-    postTitleLabel: "العنوان:",
-    postTitlePlaceholder: "مثال: خبر مميز اليوم!",
-    postBodyLabel: "المحتوى:",
-    postBodyPlaceholder: "ما الذي يدور في ذهنك؟",
-    postImageLabel: "الصورة:",
-    publishBtn: "نشر",
-    saveChangesBtn: "حفظ التعديلات",
-
-    // Modals - Delete
-    deletePostTitle: "تأكيد حذف المنشور",
-    deleteConfirmation: "هل أنت متأكد من رغبتك في حذف هذا المنشور؟ لا يمكن التراجع بعد الحذف.",
-    deleteBtn: "حذف",
-
-    // Post Card & Feed
-    editBtn: "تعديل",
-    commentsCount: "تعليقات",
-    loadMorePosts: "تحميل المزيد من المنشورات",
-    endOfPosts: "🎉 وصلت إلى نهاية جميع المنشورات",
-    loadingPosts: "جاري تحميل المنشورات...",
-    scrollDownNotice: "أو قم بالتمرير للأسفل للتحميل التلقائي ⬇️",
-    viewProfileTitle: "عرض الملف الشخصي",
-
-    // Post Details
-    postOf: "منشور",
-    backToPosts: "الرجوع للمنشورات",
-    noComments: "لا توجد تعليقات حتى الآن. كن أول من يعلق! ✨",
-    commentsHeader: "التعليقات",
-    addCommentPlaceholder: "اكتب تعليقاً لطيفاً...",
-    sendBtn: "إرسال",
-    loginToComment: "يرجى تسجيل الدخول لتتمكن من إضافة تعليق.",
-
-    // Profile Page
-    postsStat: "المنشورات",
-    commentsStat: "التعليقات",
-    userPostsTitle: "منشورات",
-    noUserPosts: "لا توجد منشورات لهذا المستخدم حتى الآن.",
-    paginationPrev: "السابق",
-    paginationNext: "التالي",
-    guest: "زائر",
-    unregistered: "غير مسجل",
-    selectUserNotice: "يرجى تسجيل الدخول أو اختيار مستخدم لعرض منشوراته.",
-
-    // Validation & Alerts
-    loginRequiredProfile: "يرجى تسجيل الدخول أولاً لعرض حسابك الشخصي.",
-    loginSuccess: "تم تسجيل الدخول بنجاح!",
-    loginFailed: "اسم المستخدم أو كلمة المرور غير صحيحة.",
-    registerSuccess: "تم إنشاء الحساب بنجاح!",
-    registerFailed: "فشل إنشاء الحساب، يرجى مراجعة البيانات المدخلة.",
-    allFieldsRequired: "هذا الحقل مطلوب.",
-    passwordMinLength: "كلمة المرور يجب أن تكون 6 أحرف على الأقل.",
-    usernameTaken: "اسم المستخدم هذا مستخدم بالفعل. يرجى اختيار اسم آخر.",
-    logoutSuccess: "تم تسجيل الخروج بنجاح!",
-    loginRequiredPost: "يجب تسجيل الدخول لنشر منشور.",
-    postCreatedSuccess: "تم نشر المنشور بنجاح!",
-    postCreateFailed: "حدث خطأ أثناء إضافة المنشور.",
-    postDetailsFailed: "فشل تحميل تفاصيل المنشور.",
-    loginRequiredComment: "يجب تسجيل الدخول لإضافة تعليق.",
-    emptyCommentWarning: "لا يمكن أن يكون التعليق فارغاً.",
-    commentSuccess: "تمت إضافة التعليق بنجاح!",
-    commentFailed: "فشل إضافة التعليق.",
-    loginRequiredEdit: "يجب تسجيل الدخول لتعديل المنشور.",
-    postUpdatedSuccess: "تم تحديث المنشور بنجاح!",
-    postUpdateFailed: "حدث خطأ أثناء تعديل المنشور.",
-    loginRequiredDelete: "يجب تسجيل الدخول لحذف المنشور.",
-    postDeletedSuccess: "تم حذف المنشور بنجاح!",
-    postDeleteFailed: "حدث خطأ أثناء حذف المنشور.",
-    userDataFailed: "فشل تحميل بيانات المستخدم.",
-    userPostsFailed: "فشل تحميل منشورات المستخدم."
-  }
-};
-
-function getCurrentLang() {
-  return localStorage.getItem("app_lang") || "en";
-}
-
-function t(key) {
-  const lang = getCurrentLang();
-  if (translations[lang] && translations[lang][key]) {
-    return translations[lang][key];
-  }
-  if (translations.en[key]) {
-    return translations.en[key];
-  }
-  return key;
-}
-
-function setLanguage(lang) {
-  localStorage.setItem("app_lang", lang);
-  applyTranslations();
-  refreshCurrentPage();
-}
-
-function toggleLanguage() {
-  const current = getCurrentLang();
-  const next = current === "en" ? "ar" : "en";
-  setLanguage(next);
-}
-
-function applyTranslations() {
-  const lang = getCurrentLang();
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-
-  // Update switcher button
-  const langBtn = document.getElementById("langSwitcherBtn");
-  if (langBtn) {
-    langBtn.innerHTML = t("langBtn");
-  }
-
-  // Update elements with data-i18n
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    if (key) {
-      el.textContent = t(key);
-    }
-  });
-
-  // Update elements with data-i18n-html
-  document.querySelectorAll("[data-i18n-html]").forEach((el) => {
-    const key = el.getAttribute("data-i18n-html");
-    if (key) {
-      el.innerHTML = t(key);
-    }
-  });
-
-  // Update placeholders
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-    const key = el.getAttribute("data-i18n-placeholder");
-    if (key) {
-      el.placeholder = t(key);
-    }
-  });
-
-  // Update titles
-  document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-    const key = el.getAttribute("data-i18n-title");
-    if (key) {
-      el.title = t(key);
-    }
-  });
-}
-
-// ==========================================
 // Form Validation & Error Helpers
 // ==========================================
 function showInputError(inputId, errorId, message) {
@@ -430,7 +157,7 @@ function profileNavClicked() {
       window.location.href = targetUrl;
     }
   } else {
-    appendAlert(t("loginRequiredProfile"), "warning");
+    appendAlert("Please log in first to view your profile.", "warning");
     const loginModalEl = document.getElementById("loginModal");
     if (loginModalEl) {
       const modal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
@@ -454,7 +181,7 @@ function getCurrentUserId() {
 }
 
 // ==========================================
-// Alerts
+// Alerts (English)
 // ==========================================
 function appendAlert(message, type) {
   const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
@@ -499,8 +226,6 @@ function setupUI() {
     if (addBtn) addBtn.style.display = "flex";
     GetUserData();
   }
-
-  applyTranslations();
 }
 
 function GetUserData() {
@@ -532,11 +257,11 @@ function loginBtnClick() {
 
   let hasError = false;
   if (!userName) {
-    showInputError("username-input", "login-username-error", t("allFieldsRequired"));
+    showInputError("username-input", "login-username-error", "This field is required.");
     hasError = true;
   }
   if (!password) {
-    showInputError("password-input", "login-password-error", t("allFieldsRequired"));
+    showInputError("password-input", "login-password-error", "This field is required.");
     hasError = true;
   }
 
@@ -558,18 +283,18 @@ function loginBtnClick() {
         modalInstance.hide();
       }
       setupUI();
-      appendAlert(t("loginSuccess"), 'success');
+      appendAlert("Logged in successfully!", 'success');
       refreshCurrentPage();
     })
     .catch((error) => {
       console.error("Login error:", error);
       const errorMsg = (error.response && error.response.data && error.response.data.message)
         ? error.response.data.message
-        : t("loginFailed");
+        : "Invalid username or password.";
 
       showInputError("username-input", "login-username-error", errorMsg);
       showInputError("password-input", "login-password-error", errorMsg);
-      appendAlert(t("loginFailed"), 'danger');
+      appendAlert("Invalid username or password.", 'danger');
     });
 }
 
@@ -588,18 +313,18 @@ function RegisterBtnClick() {
 
   let hasError = false;
   if (!reName) {
-    showInputError("re-name-input", "re-name-error", t("allFieldsRequired"));
+    showInputError("re-name-input", "re-name-error", "This field is required.");
     hasError = true;
   }
   if (!reUserName) {
-    showInputError("re-username-input", "re-username-error", t("allFieldsRequired"));
+    showInputError("re-username-input", "re-username-error", "This field is required.");
     hasError = true;
   }
   if (!rePassword) {
-    showInputError("re-password-input", "re-password-error", t("allFieldsRequired"));
+    showInputError("re-password-input", "re-password-error", "This field is required.");
     hasError = true;
   } else if (rePassword.length < 6) {
-    showInputError("re-password-input", "re-password-error", t("passwordMinLength"));
+    showInputError("re-password-input", "re-password-error", "Password must be at least 6 characters.");
     hasError = true;
   }
 
@@ -623,13 +348,13 @@ function RegisterBtnClick() {
         const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInstance.hide();
       }
-      appendAlert(t("registerSuccess"), 'success');
+      appendAlert("Account created successfully!", 'success');
       setupUI();
       refreshCurrentPage();
     })
     .catch((error) => {
       console.error("Register error:", error);
-      let alertMsg = t("registerFailed");
+      let alertMsg = "Registration failed. Please check the fields below.";
 
       if (error.response && error.response.data) {
         const data = error.response.data;
@@ -637,12 +362,12 @@ function RegisterBtnClick() {
         if (data.errors) {
           if (data.errors.username) {
             const msg = data.errors.username.join(", ");
-            const userMsg = msg.toLowerCase().includes("taken") ? t("usernameTaken") : msg;
+            const userMsg = msg.toLowerCase().includes("taken") ? "This username is already taken. Please choose another." : msg;
             showInputError("re-username-input", "re-username-error", userMsg);
           }
           if (data.errors.password) {
             const msg = data.errors.password.join(", ");
-            const passMsg = msg.toLowerCase().includes("at least") ? t("passwordMinLength") : msg;
+            const passMsg = msg.toLowerCase().includes("at least") ? "Password must be at least 6 characters." : msg;
             showInputError("re-password-input", "re-password-error", passMsg);
           }
           if (data.errors.name) {
@@ -653,7 +378,7 @@ function RegisterBtnClick() {
           }
         } else if (data.message) {
           if (data.message.toLowerCase().includes("username") || data.message.toLowerCase().includes("taken")) {
-            showInputError("re-username-input", "re-username-error", t("usernameTaken"));
+            showInputError("re-username-input", "re-username-error", "This username is already taken. Please choose another.");
           } else {
             showInputError("re-username-input", "re-username-error", data.message);
           }
@@ -668,7 +393,7 @@ function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   setupUI();
-  appendAlert(t("logoutSuccess"), 'info');
+  appendAlert("Logged out successfully!", 'info');
   refreshCurrentPage();
 }
 
@@ -698,7 +423,7 @@ function createNewPostList() {
   clearAllErrors("createNewPost");
 
   if (!postBody) {
-    showInputError("post-body-input", "post-body-error", t("allFieldsRequired"));
+    showInputError("post-body-input", "post-body-error", "This field is required.");
     return;
   }
 
@@ -711,7 +436,7 @@ function createNewPostList() {
 
   const token = localStorage.getItem("token");
   if (!token) {
-    appendAlert(t("loginRequiredPost"), "danger");
+    appendAlert("You must be logged in to create a post.", "danger");
     return;
   }
 
@@ -730,12 +455,12 @@ function createNewPostList() {
       if (postBodyInput) postBodyInput.value = "";
       if (imageInputEl) imageInputEl.value = "";
 
-      appendAlert(t("postCreatedSuccess"), 'success');
+      appendAlert("Post published successfully!", 'success');
       refreshCurrentPage();
     })
     .catch((error) => {
       console.error(error);
-      appendAlert(t("postCreateFailed"), 'danger');
+      appendAlert("Failed to publish post. Please try again.", 'danger');
     });
 }
 
@@ -773,8 +498,8 @@ function getPostes(page = 1, reload = false) {
         let deleteBtn = "";
         if (currentUser && currentUser.id == post.author.id) {
           const postJsonStr = encodeURIComponent(JSON.stringify(post));
-          editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')">${t("editBtn")}</button>`;
-          deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})">${t("deleteBtn")}</button>`;
+          editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')">Edit</button>`;
+          deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})">Delete</button>`;
         }
 
         container.innerHTML += `
@@ -782,7 +507,7 @@ function getPostes(page = 1, reload = false) {
           <div class="col-12 col-md-9 m-auto shadow-sm rounded mb-4" id="post-${post.id}">
             <div class="card" onclick="postClicked(${post.id})" style="cursor: pointer;">
               <div class="card-header d-flex justify-content-between align-items-center bg-white">
-                <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${post.author.id}, event)" title="${t("viewProfileTitle")}">
+                <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${post.author.id}, event)" title="View Profile">
                   <img src="${authorImage}" onerror="this.src='./profile-pics/user.png'" alt="" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" class="border border-secondary" />
                   <span style="font-size: 1.15rem; font-weight: 600; color: #212529;">${post.author.username}</span>
                 </div>
@@ -798,7 +523,7 @@ function getPostes(page = 1, reload = false) {
                 <p class="text-secondary">${post.body || ''}</p>
                 <hr>
                 <div class="d-flex justify-content-between align-items-center">
-                  <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${post.comments_count}) ${t("commentsCount")}</span>
+                  <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${post.comments_count}) comments</span>
                   <span id="post-tags${post.id}"></span>
                 </div>
               </div>
@@ -839,7 +564,7 @@ function showFeedLoader(show) {
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="text-muted mt-2 small">${t("loadingPosts")}</p>
+      <p class="text-muted mt-2 small">Loading posts...</p>
     `;
     container.parentElement.appendChild(loader);
   }
@@ -862,15 +587,15 @@ function updateFeedPaginationControls() {
     controlsDiv.innerHTML = `
       <div class="d-flex flex-column align-items-center gap-2">
         <button class="btn btn-primary shadow px-4 py-2 rounded-pill" onclick="loadNextFeedPage()" id="loadMoreBtn">
-          <i class="bi bi-arrow-down-circle me-2"></i>${t("loadMorePosts")} (${currentPage} / ${lastPage})
+          <i class="bi bi-arrow-down-circle me-2"></i>Load more posts (${currentPage} of ${lastPage})
         </button>
-        <span class="text-muted small">${t("scrollDownNotice")}</span>
+        <span class="text-muted small">or scroll down to auto-load ⬇️</span>
       </div>
     `;
   } else {
     controlsDiv.innerHTML = `
       <div class="alert alert-secondary d-inline-block px-4 py-2 text-muted shadow-sm rounded-pill">
-        ${t("endOfPosts")}
+        🎉 You have reached the end of all posts
       </div>
     `;
   }
@@ -930,7 +655,7 @@ function getPost() {
           commentsDiv += `
             <!-- comment -->
             <div class="p-3 my-2" style="background-color: #f8f9fa; border-radius: 10px;" id="comment${comment.id}">
-              <div style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px;" onclick="userClicked(${comment.author.id}, event)" title="${t("viewProfileTitle")}">
+              <div style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px;" onclick="userClicked(${comment.author.id}, event)" title="View Profile">
                 <img src="${commentAuthorImage}" onerror="this.src='../profile-pics/user.png'" alt="" style="height: 35px; width: 35px; border-radius: 50%; object-fit: cover;" class="border">
                 <b class="text-dark">${comment.author.username}</b>
               </div>
@@ -941,7 +666,7 @@ function getPost() {
           `;
         }
       } else {
-        commentsDiv = `<p class="text-muted p-2">${t("noComments")}</p>`;
+        commentsDiv = `<p class="text-muted p-2">No comments yet. Be the first to comment! ✨</p>`;
       }
 
       let editBtn = "";
@@ -949,15 +674,12 @@ function getPost() {
       const currentUser = JSON.parse(localStorage.getItem("user"));
       if (currentUser && currentUser.id == data.author.id) {
         const postJsonStr = encodeURIComponent(JSON.stringify(data));
-        editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="prepareEditPostFromEncoded('${postJsonStr}')">${t("editBtn")}</button>`;
-        deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="prepareDeletePost(${data.id})">${t("deleteBtn")}</button>`;
+        editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="prepareEditPostFromEncoded('${postJsonStr}')">Edit</button>`;
+        deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="prepareDeletePost(${data.id})">Delete</button>`;
       }
 
       if (postCreator) {
-        const lang = getCurrentLang();
-        postCreator.innerHTML = lang === "ar"
-          ? `${t("postOf")} <span class="text-primary">${data.author.username}</span>`
-          : `<span>${data.author.username}</span>${t("postOf")}`;
+        postCreator.innerHTML = `<span>${data.author.username}</span>'s Post`;
       }
 
       const postAuthorImg = getSafeAvatar(data.author.profile_image);
@@ -970,7 +692,7 @@ function getPost() {
         <div class="col-12 col-md-9 m-auto shadow-sm rounded mb-4" id="post-${data.id}">
           <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center bg-white">
-              <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${data.author.id}, event)" title="${t("viewProfileTitle")}">
+              <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${data.author.id}, event)" title="View Profile">
                 <img src="${postAuthorImg}" onerror="this.src='../profile-pics/user.png'" alt="" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" class="border border-secondary" />
                 <span style="font-size: 1.15rem; font-weight: 600;">${data.author.username}</span>
               </div>
@@ -986,7 +708,7 @@ function getPost() {
               <p class="text-secondary">${data.body || ''}</p>
               <hr />
               <div>
-                <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${data.comments_count}) ${t("commentsCount")}</span>
+                <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${data.comments_count}) comments</span>
                 <div class="mt-3">
                   ${commentsDiv}
                   ${handleComment()}
@@ -1007,7 +729,7 @@ function getPost() {
     })
     .catch((error) => {
       console.log(error);
-      appendAlert(t("postDetailsFailed"), "danger");
+      appendAlert("Failed to load post details.", "danger");
     });
 }
 
@@ -1016,14 +738,14 @@ function handleComment() {
   if (token != null) {
     return `
       <div id="addCommentDiv" class="my-3 d-flex gap-2">
-        <input type="text" id="commentInput" class="form-control" placeholder="${t("addCommentPlaceholder")}">
-        <button class="btn btn-primary" onclick="createCommentClicked()">${t("sendBtn")}</button>
+        <input type="text" id="commentInput" class="form-control" placeholder="Write a comment...">
+        <button class="btn btn-primary" onclick="createCommentClicked()">Send</button>
       </div>
     `;
   } else {
     return `
       <div class="alert alert-light border my-2 text-center text-muted">
-        ${t("loginToComment")}
+        Please log in to add a comment.
       </div>
     `;
   }
@@ -1036,11 +758,11 @@ function createCommentClicked() {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    appendAlert(t("loginRequiredComment"), "danger");
+    appendAlert("You must be logged in to comment.", "danger");
     return;
   }
   if (!commentInput || commentInput.value.trim() === "") {
-    appendAlert(t("emptyCommentWarning"), "warning");
+    appendAlert("Comment cannot be empty.", "warning");
     return;
   }
 
@@ -1055,11 +777,11 @@ function createCommentClicked() {
     .then((response) => {
       commentInput.value = "";
       getPost();
-      appendAlert(t("commentSuccess"), "success");
+      appendAlert("Comment added successfully!", "success");
     })
     .catch((error) => {
       console.error(error);
-      appendAlert(t("commentFailed"), "danger");
+      appendAlert("Failed to add comment.", "danger");
     });
 }
 
@@ -1097,12 +819,12 @@ function updataPost() {
   clearAllErrors("editModal");
 
   if (!bodyInput.trim()) {
-    showInputError("editBody", "edit-body-error", t("allFieldsRequired"));
+    showInputError("editBody", "edit-body-error", "This field is required.");
     return;
   }
 
   if (!token) {
-    appendAlert(t("loginRequiredEdit"), "danger");
+    appendAlert("You must be logged in to edit a post.", "danger");
     return;
   }
 
@@ -1125,12 +847,12 @@ function updataPost() {
         const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInstance.hide();
       }
-      appendAlert(t("postUpdatedSuccess"), "success");
+      appendAlert("Post updated successfully!", "success");
       refreshCurrentPage();
     })
     .catch((error) => {
       console.error(error);
-      appendAlert(t("postUpdateFailed"), "danger");
+      appendAlert("Failed to update post.", "danger");
     });
 }
 
@@ -1141,7 +863,7 @@ function deletePost() {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    appendAlert(t("loginRequiredDelete"), "danger");
+    appendAlert("You must be logged in to delete a post.", "danger");
     return;
   }
 
@@ -1156,7 +878,7 @@ function deletePost() {
         const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInstance.hide();
       }
-      appendAlert(t("postDeletedSuccess"), "success");
+      appendAlert("Post deleted successfully!", "success");
 
       if (document.getElementById("postDeatils")) {
         window.location.href = getHomePath();
@@ -1166,7 +888,7 @@ function deletePost() {
     })
     .catch((error) => {
       console.error(error);
-      appendAlert(t("postDeleteFailed"), "danger");
+      appendAlert("Failed to delete post.", "danger");
     });
 }
 
@@ -1189,13 +911,13 @@ function getUser() {
   const postName = document.getElementById("postName");
 
   if (!userId) {
-    if (headerName) headerName.innerText = t("guest");
-    if (headerName2) headerName2.innerText = t("guest");
-    if (headeremail) headeremail.innerText = t("unregistered");
+    if (headerName) headerName.innerText = "Guest";
+    if (headerName2) headerName2.innerText = "Guest";
+    if (headeremail) headeremail.innerText = "Not registered";
     if (headerUsername) headerUsername.innerText = "";
     if (postsCounter) postsCounter.innerText = "0";
     if (commentConunter) commentConunter.innerText = "0";
-    if (postName) postName.innerText = t("guest");
+    if (postName) postName.innerText = "Guest";
     return;
   }
 
@@ -1203,9 +925,9 @@ function getUser() {
     .then((response) => {
       const userData = response.data.data;
 
-      if (headerName) headerName.innerText = userData.name || userData.username || t("guest");
+      if (headerName) headerName.innerText = userData.name || userData.username || "User";
       if (headerName2) headerName2.innerText = userData.name || userData.username || "";
-      if (headeremail) headeremail.innerText = userData.email || t("unregistered");
+      if (headeremail) headeremail.innerText = userData.email || "Email not available";
       if (headerUsername) headerUsername.innerText = userData.username ? `@${userData.username}` : "";
       if (postsCounter) postsCounter.innerText = userData.posts_count != null ? userData.posts_count : 0;
       if (commentConunter) commentConunter.innerText = userData.comments_count != null ? userData.comments_count : 0;
@@ -1215,7 +937,7 @@ function getUser() {
       }
 
       if (postName) {
-        postName.innerText = userData.username || userData.name || t("guest");
+        postName.innerText = userData.username || userData.name || "User";
       }
 
       // If this is the logged in user, keep local storage and navbar updated
@@ -1227,7 +949,7 @@ function getUser() {
     })
     .catch((error) => {
       console.error(error);
-      appendAlert(t("userDataFailed"), "danger");
+      appendAlert("Failed to load user data.", "danger");
     });
 }
 
@@ -1237,7 +959,7 @@ function getUserPostes() {
   if (!userPostesDiv) return;
 
   if (!userId) {
-    userPostesDiv.innerHTML = `<div class="alert alert-warning text-center">${t("selectUserNotice")}</div>`;
+    userPostesDiv.innerHTML = `<div class="alert alert-warning text-center">Please log in or select a user to view their posts.</div>`;
     return;
   }
 
@@ -1251,7 +973,7 @@ function getUserPostes() {
     })
     .catch(function (error) {
       console.error(error);
-      userPostesDiv.innerHTML = `<div class="alert alert-danger text-center">${t("userPostsFailed")}</div>`;
+      userPostesDiv.innerHTML = `<div class="alert alert-danger text-center">Failed to load user posts.</div>`;
     });
 }
 
@@ -1263,7 +985,7 @@ function renderProfilePostsPage(page = 1) {
   userPostesDiv.innerHTML = "";
 
   if (!profileUserPosts || profileUserPosts.length === 0) {
-    userPostesDiv.innerHTML = `<div class="alert alert-info text-center">${t("noUserPosts")}</div>`;
+    userPostesDiv.innerHTML = `<div class="alert alert-info text-center">This user has no posts yet.</div>`;
     return;
   }
 
@@ -1280,8 +1002,8 @@ function renderProfilePostsPage(page = 1) {
 
     if (currentUser && currentUser.id == post.author.id) {
       const postJsonStr = encodeURIComponent(JSON.stringify(post));
-      editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')">${t("editBtn")}</button>`;
-      deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})">${t("deleteBtn")}</button>`;
+      editBtn = `<button class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editModal" onclick="event.stopPropagation(); prepareEditPostFromEncoded('${postJsonStr}')">Edit</button>`;
+      deleteBtn = `<button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#DeleteModal" onclick="event.stopPropagation(); prepareDeletePost(${post.id})">Delete</button>`;
     }
 
     const authorImage = getSafeAvatar(post.author.profile_image);
@@ -1294,7 +1016,7 @@ function renderProfilePostsPage(page = 1) {
       <div class="col-12 col-md-9 m-auto shadow-sm rounded mb-4" id="post-${post.id}">
         <div class="card" onclick="postClicked(${post.id})" style="cursor: pointer;">
           <div class="card-header d-flex justify-content-between align-items-center bg-white">
-            <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${post.author.id}, event)" title="${t("viewProfileTitle")}">
+            <div style="cursor: pointer; display: flex; align-items: center; gap: 10px;" onclick="userClicked(${post.author.id}, event)" title="View Profile">
               <img src="${authorImage}" onerror="this.src='../profile-pics/user.png'" alt="" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover;" class="border border-secondary" />
               <span style="font-size: 1.15rem; font-weight: 600;">${post.author.username}</span>
             </div>
@@ -1310,7 +1032,7 @@ function renderProfilePostsPage(page = 1) {
             <p class="text-secondary">${post.body || ''}</p>
             <hr />
             <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${post.comments_count}) ${t("commentsCount")}</span>
+              <span class="text-muted"><i class="bi bi-chat-left-text me-1"></i>(${post.comments_count}) comments</span>
               <span id="user-post-tags-${post.id}"></span>
             </div>
           </div>
@@ -1332,7 +1054,7 @@ function renderProfilePostsPage(page = 1) {
       <nav aria-label="User posts pagination" class="col-12 col-md-9 m-auto my-4">
         <ul class="pagination justify-content-center shadow-sm">
           <li class="page-item ${page === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="javascript:void(0)" onclick="renderProfilePostsPage(${page - 1})">${t("paginationPrev")}</a>
+            <a class="page-link" href="javascript:void(0)" onclick="renderProfilePostsPage(${page - 1})">Previous</a>
           </li>
     `;
 
@@ -1346,7 +1068,7 @@ function renderProfilePostsPage(page = 1) {
 
     paginationHtml += `
           <li class="page-item ${page === totalPages ? 'disabled' : ''}">
-            <a class="page-link" href="javascript:void(0)" onclick="renderProfilePostsPage(${page + 1})">${t("paginationNext")}</a>
+            <a class="page-link" href="javascript:void(0)" onclick="renderProfilePostsPage(${page + 1})">Next</a>
           </li>
         </ul>
       </nav>
