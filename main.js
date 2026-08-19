@@ -131,16 +131,6 @@ function userClicked(userId, event) {
   if (event) {
     event.stopPropagation();
   }
-  const token = localStorage.getItem("token");
-  if (!token) {
-    appendAlert("Please log in first to view user profiles.", "warning");
-    const loginModalEl = document.getElementById("loginModal");
-    if (loginModalEl) {
-      const modal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
-      modal.show();
-    }
-    return;
-  }
   if (!userId) return;
   window.location.href = getProfilePath(userId);
 }
@@ -1117,10 +1107,12 @@ window.addEventListener("DOMContentLoaded", () => {
   setupInputListeners();
   setupUI();
 
-  // Auth guard: If on Profile page and not logged in, redirect to Home
+  // Auth guard: If on Profile page with no userId and not logged in, redirect to Home
   if (window.location.pathname.toLowerCase().includes("profile.html")) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetUserId = urlParams.get("userId");
     const token = localStorage.getItem("token");
-    if (!token) {
+    if (!targetUserId && !token) {
       window.location.replace(getHomePath());
       return;
     }
